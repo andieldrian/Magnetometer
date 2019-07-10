@@ -7,14 +7,32 @@
 //
 
 import UIKit
+import CoreMotion
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var xLabel: UILabel!
+    @IBOutlet weak var yLabel: UILabel!
+    @IBOutlet weak var zLabel: UILabel!
+    
+    let motionManager = CMMotionManager()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        startMagnetometer()
     }
-
+    
+    func startMagnetometer() {
+        if motionManager.isMagnetometerAvailable {
+            motionManager.magnetometerUpdateInterval = 0.1
+            motionManager.startMagnetometerUpdates(to: OperationQueue.main) { (data, error) in
+//                print(data)
+                self.xLabel.text = "x: \(data!.magneticField.x)"
+                self.yLabel.text = "y: \(data!.magneticField.y)"
+                self.zLabel.text = "z: \(data!.magneticField.z)"
+            }
+        }
+    }
 
 }
 
